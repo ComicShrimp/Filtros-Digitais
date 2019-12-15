@@ -1,0 +1,2 @@
+{'__header__': b'MATLAB 5.0 MAT-file Platform: posix, Created on: Wed Dec 27 11:39:00 2017', '__version__': '1.0', '__globals__': [], 'r': array([[ 1.99410075, -0.10829859, -0.571322  , ..., -0.03812132,
+         0.8369757 ,  0.93824464]]), 'fs': array([[44100]])}
