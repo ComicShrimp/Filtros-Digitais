@@ -1,6 +1,5 @@
-import scipy.io.wavfile as wav
 import matplotlib.pyplot as plt
-import numpy as np
+import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 import scipy.signal
 
@@ -9,6 +8,15 @@ audioBruto = scipy.io.loadmat('proj.mat')
 
 # Retira somente os dados do arquivo do matlab
 audioBruto = audioBruto.get('r')[0]
+
+# Faz a transformada de fourier
+frequencia = scipy.fftpack.fft(audioBruto)
+
+plt.plot(abs(frequencia))
+plt.xlabel('Frequência')
+plt.ylabel('Magnitude')
+plt.grid(True)
+plt.show()
 
 fs = 44100  # Frequência de amostragem
 fc = 11000  # Frequência de corte baixa
@@ -26,9 +34,6 @@ sinal2 = scipy.signal.filtfilt(c, d, audioBruto)
 
 texto1 = scipy.signal.hilbert(sinal1)
 texto2 = scipy.signal.hilbert(sinal2)
-
-# Faz a transformada de fourier
-frequencia = np.fft.rfft(np.abs(sinal2))
 
 wav.write('saida.wav', 44100, abs(texto1))
 wav.write('saida2.wav', 44100, abs(texto2))
