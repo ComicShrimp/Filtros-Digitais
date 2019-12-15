@@ -11,27 +11,24 @@ audioBruto = scipy.io.loadmat('proj.mat')
 audioBruto = audioBruto.get('r')[0]
 
 fs = 44100  # Frequência de amostragem
-fc = 11500  # Frequência de corte
+fc = 11000  # Frequência de corte baixa
+fc2 = 14000  # Frequência de corte alta
 w = fc / (fs / 2)  # Normalização
+w2 = fc / (fs / 2)
 
-# Cria o filtro
+# Cria os filtros
 b, a = scipy.signal.butter(20, w, 'low')
+c, d = scipy.signal.butter(20, w, 'high')
 
 # Executa o Filtro no sinal
-output = scipy.signal.filtfilt(b, a, audioBruto)
+sinal1 = scipy.signal.filtfilt(b, a, audioBruto)
+sinal2 = scipy.signal.filtfilt(c, d, audioBruto)
 
-sinal2 = scipy.signal.hilbert(output)
+texto1 = scipy.signal.hilbert(sinal1)
+texto2 = scipy.signal.hilbert(sinal2)
 
 # Faz a transformada de fourier
 frequencia = np.fft.rfft(np.abs(sinal2))
 
-wav.write('saida.wav', 44100, abs(sinal2))
-
-# # Gráfico da Mensagem
-# plt.title('Mensagem')
-plt.plot(abs(sinal2))
-# plt.xlabel('Tempo')
-# plt.ylabel('Amplitude')
-plt.grid(True)
-
-plt.show()
+wav.write('saida.wav', 44100, abs(texto1))
+wav.write('saida2.wav', 44100, abs(texto2))
