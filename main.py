@@ -10,13 +10,14 @@ audioBruto = scipy.io.loadmat('proj.mat')
 audioBruto = audioBruto.get('r')[0]
 
 # Faz a transformada de fourier
-# frequencia = scipy.fftpack.fft(audioBruto)
+frequencia = scipy.fftpack.fft(audioBruto)
 
-# plt.plot(abs(frequencia))
-# plt.xlabel('Frequência')
-# plt.ylabel('Magnitude')
-# plt.grid(True)
-# plt.show()
+plt.subplot(2, 2, 1)
+plt.title('Sinal de Entrada')
+plt.plot(abs(frequencia))
+plt.xlabel('Frequência')
+plt.ylabel('Magnitude')
+plt.grid(True)
 
 fs = 44100  # Frequência de amostragem
 
@@ -43,6 +44,26 @@ sinalSemRuido2 = scipy.signal.filtfilt(c, d, audioBruto)
 # Demodula os sinais
 texto1 = scipy.signal.hilbert(sinalSemRuido1)
 texto2 = scipy.signal.hilbert(sinalSemRuido2)
+
+frequencia = scipy.fftpack.fft(texto1)
+frequencia2 = scipy.fftpack.fft(texto2)
+
+plt.subplot(2, 2, 2)
+plt.title('Sinal 1')
+plt.plot(abs(frequencia))
+plt.xlabel('Frequência')
+plt.ylabel('Magnitude')
+plt.grid(True)
+
+plt.subplot(2, 2, 3)
+plt.title('Sinal 2')
+plt.plot(abs(frequencia2))
+plt.xlabel('Frequência')
+plt.ylabel('Magnitude')
+plt.grid(True)
+
+# Mostra Todos os gráficos
+plt.show()
 
 # Escreve os arquivos .wav
 wav.write('saida.wav', 44100, abs(texto1))
