@@ -10,30 +10,40 @@ audioBruto = scipy.io.loadmat('proj.mat')
 audioBruto = audioBruto.get('r')[0]
 
 # Faz a transformada de fourier
-frequencia = scipy.fftpack.fft(audioBruto)
+# frequencia = scipy.fftpack.fft(audioBruto)
 
-plt.plot(abs(frequencia))
-plt.xlabel('Frequência')
-plt.ylabel('Magnitude')
-plt.grid(True)
-plt.show()
+# plt.plot(abs(frequencia))
+# plt.xlabel('Frequência')
+# plt.ylabel('Magnitude')
+# plt.grid(True)
+# plt.show()
 
 fs = 44100  # Frequência de amostragem
-fc = 11000  # Frequência de corte baixa
-fc2 = 14000  # Frequência de corte alta
-w = fc / (fs / 2)  # Normalização
-w2 = fc / (fs / 2)
 
-# Cria os filtros
-b, a = scipy.signal.butter(20, w, 'low')
-c, d = scipy.signal.butter(20, w, 'high')
+fc = 3900   # Frequencia de corte baixa
+fc1 = 6750  # Frequência de corte alta
 
-# Executa o Filtro no sinal
-sinal1 = scipy.signal.filtfilt(b, a, audioBruto)
-sinal2 = scipy.signal.filtfilt(c, d, audioBruto)
+fc2 = 13800  # Frequencia de corte baixa
+fc3 = 15750  # Frequência de corte alta
 
-texto1 = scipy.signal.hilbert(sinal1)
-texto2 = scipy.signal.hilbert(sinal2)
+w = fc / (fs / 2)  # Normalização para radiano
+w1 = fc1 / (fs / 2)
 
+w2 = fc2 / (fs / 2)
+w3 = fc3 / (fs / 2)
+
+# Cria os filtros para aplicá-los depois
+a, b = scipy.signal.butter(5, [w, w1], 'bandpass')
+c, d = scipy.signal.butter(5, [w2, w3], 'bandpass')
+
+# Aplica os ruidos
+sinalSemRuido1 = scipy.signal.filtfilt(a, b, audioBruto)
+sinalSemRuido2 = scipy.signal.filtfilt(c, d, audioBruto)
+
+# Demodula os sinais
+texto1 = scipy.signal.hilbert(sinalSemRuido1)
+texto2 = scipy.signal.hilbert(sinalSemRuido2)
+
+# Escreve os arquivos .wav
 wav.write('saida.wav', 44100, abs(texto1))
 wav.write('saida2.wav', 44100, abs(texto2))
